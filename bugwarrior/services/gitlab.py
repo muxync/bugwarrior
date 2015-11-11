@@ -8,6 +8,8 @@ from twiggy import log
 from bugwarrior.config import asbool, die, get_service_password
 from bugwarrior.services import IssueService, Issue
 
+import requests.packages.urllib3
+requests.packages.urllib3.disable_warnings()
 
 class GitlabIssue(Issue):
     TITLE = 'gitlabtitle'
@@ -274,7 +276,7 @@ class GitlabService(IssueService):
         url = tmpl.format(scheme=self.scheme, host=self.auth[0])
         headers = {'PRIVATE-TOKEN': self.auth[1]}
 
-        response = requests.get(url, headers=headers, **kwargs)
+        response = requests.get(url, headers=headers, verify=False, **kwargs)
 
         if callable(response.json):
             json_res = response.json()
